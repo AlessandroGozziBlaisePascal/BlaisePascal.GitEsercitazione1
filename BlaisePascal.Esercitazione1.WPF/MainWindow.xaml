@@ -1,0 +1,51 @@
+﻿<Window x:Class="BlaisePascal.Esercitazione1.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BlaisePascal.Esercitazione1.WPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" Margin="10">
+            <TextBlock Text="Crea Nuovo Brano" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+            <TextBlock Text="Titolo:"/>
+            <TextBox x:Name="txtTitoloBrano" Margin="0,5,0,10"/>
+            <TextBlock Text="Durata (mm:ss):"/>
+            <TextBox x:Name="txtDurataBrano" Margin="0,5,0,10"/>
+            <Button Content="Aggiungi Brano" Click="BtnAggiungiBrano_Click" Height="30" Background="#4CAF50" Foreground="White"/>
+        </StackPanel>
+
+        <Grid Grid.Column="1" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="Dettagli CD" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+                <DockPanel>
+                    <TextBlock Text="Titolo CD: " VerticalAlignment="Center"/>
+                    <TextBox x:Name="txtTitoloCD" Margin="5,0" Width="200"/>
+                    <Button Content="Crea/Aggiorna CD" Click="BtnCreaCD_Click" Padding="10,2"/>
+                </DockPanel>
+            </StackPanel>
+
+            <GroupBox Header="Contenuto CD" Grid.Row="1" Margin="0,15">
+                <ListBox x:Name="lstBraniCD" DisplayMemberPath="." />
+            </GroupBox>
+
+            <StackPanel Grid.Row="2">
+                <TextBlock Text="Console di Test:" FontWeight="Bold"/>
+                <TextBlock x:Name="lblStatus" Text="In attesa di dati..." Foreground="Gray" FontStyle="Italic"/>
+                <Button Content="Testa Funzionalità CD" Margin="0,10,0,0" Click="BtnTest_Click" Height="30" Background="#2196F3" Foreground="White"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
