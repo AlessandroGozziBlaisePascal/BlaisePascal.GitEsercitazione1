@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using BlaisePascal.Esercitazione1.Domain;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,60 +17,64 @@ namespace BlaisePascal.Esercitazione1.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        public partial class MainWindow : Window
+        // Proprietà per il Binding
+        public Brano NuovoBrano { get; set; }
+        public CD MioCD { get; set; }
+
+        public MainWindow()
         {
-            private CD mioCD;
+            InitializeComponent();
+            NuovoBrano = new Brano();
+            MioCD = new CD();
 
-            public MainWindow()
-            {
-                InitializeComponent();
-                mioCD = new CD();
-            }
+            // Impostiamo il DataContext per far funzionare i Binding ({Binding ...})
+            this.DataContext = this;
+        }
 
-            // Funzionalità Oggetto Brano
-            private void BtnAggiungiBrano_Click(object sender, RoutedEventArgs e)
+        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(NuovoBrano.Titolo)) return;
+
+            // Creiamo una copia del brano per aggiungerlo alla lista
+            Brano branoDaAggiungere = new Brano
             {
-                if (!string.IsNullOrWhiteSpace(txtTitoloBrano.Text))
+                Titolo = NuovoBrano.Titolo,
+                Durata = NuovoBrano.Durata,
+                Artista = new Autore
                 {
-                    Brano nuovoBrano = new Brano
-                    {
-                        Titolo = txtTitoloBrano.Text,
-                        Durata = txtDurataBrano.Text
-                    };
-
-                    mioCD.Brani.Add(nuovoBrano);
-                    AggiornaInterfaccia();
-
-                    txtTitoloBrano.Clear();
-                    txtDurataBrano.Clear();
-                    lblStatus.Text = $"Oggetto Brano '{nuovoBrano.Titolo}' creato e aggiunto.";
+                    NomeArte = NuovoBrano.Artista.NomeArte,
+                    NomeReale = NuovoBrano.Artista.NomeReale,
+                    Cognome = NuovoBrano.Artista.Cognome
                 }
-            }
+            };
 
-            // Funzionalità Oggetto CD
-            private void BtnCreaCD_Click(object sender, RoutedEventArgs e)
-            {
-                mioCD.TitoloCD = txtTitoloCD.Text;
-                lblStatus.Text = $"CD rinominato in: {mioCD.TitoloCD}";
-            }
+            MioCD.ListaBrani.Add(branoDaAggiungere);
+            lblStatus.Text = $"Brano '{branoDaAggiungere.Titolo}' aggiunto con successo.";
 
-            private void BtnTest_Click(object sender, RoutedEventArgs e)
-            {
-                if (mioCD.Brani.Count > 0)
-                {
-                    MessageBox.Show(mioCD.InfoCD, "Test Funzionalità CD");
-                }
-                else
-                {
-                    MessageBox.Show("Il CD è vuoto! Aggiungi dei brani prima.", "Errore Test");
-                }
-            }
+            // Reset campi input
+            NuovoBrano.Titolo = "";
+            NuovoBrano.Durata = "";
+            NuovoBrano.Artista.NomeArte = "";
+            NuovoBrano.Artista.NomeReale = "";
+            NuovoBrano.Artista.Cognome = "";
+        }
 
-            private void AggiornaInterfaccia()
-            {
-                lstBraniCD.ItemsSource = null;
-                lstBraniCD.ItemsSource = mioCD.Brani;
-            }
+        private void BtnCreaCD_Click(object sender, RoutedEventArgs e)
+        {
+            MioCD.Titolo = txtTitoloCD.Text;
+            lblStatus.Text = $"CD '{MioCD.Titolo}' aggiornato.";
+        }
+
+        private void BtnTest_Click(object sender, RoutedEventArgs e)
+        {
+            string report = $"TEST CD: {MioCD.Titolo}\n" +
+                           $"Numero Brani: {MioCD.ListaBrani.Count}\n" +
+                           "--------------------------\n";
+
+            foreach (var b in MioCD.ListaBrani)
+                report += $"- {b.ToString()}\n";
+
+            MessageBox.Show(report, "Risultato Test Funzionalità");
         }
     }
 }

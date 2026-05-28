@@ -8,4 +8,8 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BlaisePascal.Esercitazione1.Domain\BlaisePascal.Esercitazione1.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

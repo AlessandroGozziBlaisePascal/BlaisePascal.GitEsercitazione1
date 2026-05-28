@@ -6,46 +6,73 @@
         xmlns:local="clr-namespace:BlaisePascal.Esercitazione1.WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid Margin="20">
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0" Margin="10">
-            <TextBlock Text="Crea Nuovo Brano" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
-            <TextBlock Text="Titolo:"/>
-            <TextBox x:Name="txtTitoloBrano" Margin="0,5,0,10"/>
-            <TextBlock Text="Durata (mm:ss):"/>
-            <TextBox x:Name="txtDurataBrano" Margin="0,5,0,10"/>
-            <Button Content="Aggiungi Brano" Click="BtnAggiungiBrano_Click" Height="30" Background="#4CAF50" Foreground="White"/>
-        </StackPanel>
+        <Border Grid.Column="0" Background="White" CornerRadius="5" Padding="15" Margin="5">
+            <StackPanel>
+                <TextBlock Text="Crea Nuovo Brano" FontSize="20" FontWeight="Bold" Foreground="#2196F3" Margin="0,0,0,10"/>
 
-        <Grid Grid.Column="1" Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+                <TextBlock Text="Titolo:" Margin="0,5,0,0"/>
+                <TextBox x:Name="txtInTitolo" Text="{Binding NuovoBrano.Titolo, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,10"/>
 
-            <StackPanel Grid.Row="0">
-                <TextBlock Text="Dettagli CD" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
-                <DockPanel>
-                    <TextBlock Text="Titolo CD: " VerticalAlignment="Center"/>
-                    <TextBox x:Name="txtTitoloCD" Margin="5,0" Width="200"/>
-                    <Button Content="Crea/Aggiorna CD" Click="BtnCreaCD_Click" Padding="10,2"/>
-                </DockPanel>
+                <TextBlock Text="Durata (mm:ss):" Margin="0,5,0,0"/>
+                <TextBox x:Name="txtInDurata" Text="{Binding NuovoBrano.Durata, UpdateSourceTrigger=PropertyChanged}" Margin="0,2,0,20"/>
+
+                <Button Content="Aggiungi Brano" Click="BtnAdd_Click" Background="#4CAF50" Foreground="White" Height="35" FontWeight="Bold"/>
+
+                <Separator Margin="0,20" Background="#EEE"/>
+
+                <TextBlock Text="Dati Brano" FontWeight="Bold" Foreground="#2196F3" Margin="0,0,0,5"/>
+                <StackPanel Margin="10,0,0,10">
+                    <TextBlock Text="Titolo Brano:"/>
+                    <TextBlock Text="{Binding NuovoBrano.Titolo}" FontStyle="Italic" Foreground="Gray" Margin="0,0,0,5"/>
+                    <TextBlock Text="Durata (mm:ss):"/>
+                    <TextBlock Text="{Binding NuovoBrano.Durata}" FontStyle="Italic" Foreground="Gray"/>
+                </StackPanel>
+
+                <TextBlock Text="Dati Autore" FontWeight="Bold" Foreground="#2196F3" Margin="0,10,0,5"/>
+                <StackPanel Margin="10,0,0,0">
+                    <TextBlock Text="Nome d'Arte:"/>
+                    <TextBlock Text="{Binding NuovoBrano.Artista.NomeArte}" FontStyle="Italic" Foreground="Gray" Margin="0,0,0,5"/>
+                    <TextBlock Text="Nome Reale:"/>
+                    <TextBlock Text="{Binding NuovoBrano.Artista.NomeReale}" FontStyle="Italic" Foreground="Gray" Margin="0,0,0,5"/>
+                    <TextBlock Text="Cognome:"/>
+                    <TextBox x:Name="txtInCognome" Text="{Binding NuovoBrano.Artista.Cognome, UpdateSourceTrigger=PropertyChanged}" Height="20" Margin="0,2"/>
+                </StackPanel>
             </StackPanel>
+        </Border>
 
-            <GroupBox Header="Contenuto CD" Grid.Row="1" Margin="0,15">
-                <ListBox x:Name="lstBraniCD" DisplayMemberPath="." />
-            </GroupBox>
+        <Border Grid.Column="1" Background="White" CornerRadius="5" Padding="15" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="2">
-                <TextBlock Text="Console di Test:" FontWeight="Bold"/>
-                <TextBlock x:Name="lblStatus" Text="In attesa di dati..." Foreground="Gray" FontStyle="Italic"/>
-                <Button Content="Testa Funzionalità CD" Margin="0,10,0,0" Click="BtnTest_Click" Height="30" Background="#2196F3" Foreground="White"/>
-            </StackPanel>
-        </Grid>
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="Dettagli CD" FontSize="20" FontWeight="Bold" Foreground="#2196F3" Margin="0,0,0,15"/>
+                    <DockPanel LastChildFill="True" Margin="0,0,0,20">
+                        <TextBlock Text="Titolo CD: " VerticalAlignment="Center"/>
+                        <Button Content="Crea/Aggiorna CD" DockPanel.Dock="Right" Width="150" Margin="10,0,0,0" Click="BtnCreaCD_Click"/>
+                        <TextBox x:Name="txtTitoloCD"/>
+                    </DockPanel>
+                </StackPanel>
+
+                <GroupBox Header="Contenuto CD" Grid.Row="1" Margin="0,0,0,20">
+                    <ListBox x:Name="lstBrani" ItemsSource="{Binding MioCD.ListaBrani}"/>
+                </GroupBox>
+
+                <StackPanel Grid.Row="2">
+                    <TextBlock Text="Console di Test:" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <TextBlock x:Name="lblStatus" Text="in attesa di dati..." FontStyle="Italic" Foreground="Gray" Margin="0,0,0,10"/>
+                    <Button Content="Testa Funzionalità CD" Background="#2196F3" Foreground="White" Height="40" FontWeight="Bold" Click="BtnTest_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
