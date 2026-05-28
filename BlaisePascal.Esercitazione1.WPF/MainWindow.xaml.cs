@@ -12,69 +12,62 @@ using System.Windows.Shapes;
 
 namespace BlaisePascal.Esercitazione1.WPF
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        // Proprietà per il Binding
-        public Brano NuovoBrano { get; set; }
-        public CD MioCD { get; set; }
+        private CD? mioCD;
 
         public MainWindow()
         {
             InitializeComponent();
-            NuovoBrano = new Brano();
-            MioCD = new CD();
-
-            // Impostiamo il DataContext per far funzionare i Binding ({Binding ...})
-            this.DataContext = this;
         }
 
-        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        private void BtnAggiungi_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(NuovoBrano.Titolo)) return;
-
-            // Creiamo una copia del brano per aggiungerlo alla lista
-            Brano branoDaAggiungere = new Brano
+            try
             {
-                Titolo = NuovoBrano.Titolo,
-                Durata = NuovoBrano.Durata,
-                Artista = new Autore
-                {
-                    NomeArte = NuovoBrano.Artista.NomeArte,
-                    NomeReale = NuovoBrano.Artista.NomeReale,
-                    Cognome = NuovoBrano.Artista.Cognome
-                }
-            };
+                Author autore = new(txtNomeArte.Text, txtNome.Text, txtCognome.Text);
 
-            MioCD.ListaBrani.Add(branoDaAggiungere);
-            lblStatus.Text = $"Brano '{branoDaAggiungere.Titolo}' aggiunto con successo.";
+                Brano brano = new Brano(txtTitoloBrano.Text, autore, int.Parse(txtDurata.Text));
+               
+                mioCD = new CD(txtTitoloCD.Text, autore.ArtisticName);
+                mioCD.Brani.Add(brano);
 
-            // Reset campi input
-            NuovoBrano.Titolo = "";
-            NuovoBrano.Durata = "";
-            NuovoBrano.Artista.NomeArte = "";
-            NuovoBrano.Artista.NomeReale = "";
-            NuovoBrano.Artista.Cognome = "";
-        }
+                lstBrani.Items.Add(brano.ToString());
 
-        private void BtnCreaCD_Click(object sender, RoutedEventArgs e)
-        {
-            MioCD.Titolo = txtTitoloCD.Text;
-            lblStatus.Text = $"CD '{MioCD.Titolo}' aggiornato.";
+                PuliziaCampi();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Errore: Inserisci dati validi (controlla la durata).");
+            }
         }
 
         private void BtnTest_Click(object sender, RoutedEventArgs e)
         {
-            string report = $"TEST CD: {MioCD.Titolo}\n" +
-                           $"Numero Brani: {MioCD.ListaBrani.Count}\n" +
-                           "--------------------------\n";
+            if (mioCD == null)
+            {
+                MessageBox.Show("Nessun CD creato! Aggiungi un brano per testare.");
+                return;
+            }
+            if (mioCD.Brani.Count == 0)
+            {
+                MessageBox.Show("Il CD è vuoto! Aggiungi un brano per testare.");
+                return;
+            }
 
-            foreach (var b in MioCD.ListaBrani)
-                report += $"- {b.ToString()}\n";
+            string report = $"--- TEST CD ---\n" +
+                            $"Titolo: {mioCD.GetTitolo()}\n" +
+                            $"Numero tracce: {mioCD.Brani.Count}\n" +
+                            $"Primo Brano: {mioCD.Brani[0].GetTitle()}\n" +
+                            $"Autore: {mioCD.Brani[0].GetAuthor().ArtisticName}";
 
             MessageBox.Show(report, "Risultato Test Funzionalità");
+        }
+
+        private void PuliziaCampi()
+        {
+            txtTitoloBrano.Clear();
+            txtDurata.Clear();
         }
     }
 }
